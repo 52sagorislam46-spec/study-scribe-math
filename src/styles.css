@@ -259,7 +259,7 @@ button.setting-active { background: var(--card); color: var(--foreground); box-s
 .answer-display > span:first-child { min-width: 0; overflow: hidden; }
 .answer-cursor { height: 22px; width: 2px; background: var(--team); opacity: .5; }
 .feedback-correct { color: var(--primary); background: var(--success-soft); border-color: var(--primary); font-size: 17px; }.feedback-wrong { color: var(--team-red); border-color: var(--team-red); font-size: 17px; }
-.numeric-keypad { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+.numeric-keypad { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
 .number-key { height: 55px; padding: 0; border: 1px solid var(--border); border-bottom-width: 3px; border-radius: 5px; background: var(--card); color: var(--foreground); font-size: 22px; font-weight: 800; font-family: var(--font-display); transition: background .15s, transform .1s; }
 .number-key:disabled { opacity: 1; color: color-mix(in oklch,var(--foreground) 80%,var(--card)); }
 .number-key:hover { background: var(--team-soft); color: var(--team); }.number-key:active { transform: translateY(2px); border-bottom-width: 1px; }

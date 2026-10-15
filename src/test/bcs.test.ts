@@ -18,13 +18,13 @@ describe('BCS scoring', () => {
 });
 
 describe('BCS question deck', () => {
-  it('mixed deck gives every subject an equal share and no repeats in a 40-question round', () => {
+  it("mixed deck: non-math subjects equal, math half as often, no repeats in a 40-question round", () => {
     const next = makeDeck(null);
-    const drawn = Array.from({ length: 40 }, () => next());
-    expect(new Set(drawn.map(q => q.q)).size).toBe(40);
+    const drawn = Array.from({ length: 30 }, () => next());
+    expect(new Set(drawn.map(q => q.q)).size).toBe(30);
     const counts = new Map<string, number>();
     drawn.forEach(q => counts.set(q.subject, (counts.get(q.subject) ?? 0) + 1));
-    expect([...counts.values()].every(c => c === 5)).toBe(true);
+    counts.forEach((c, s) => expect(c).toBe(s === MATH_SUBJECT ? 2 : 4));
   });
   it('keeps subject decks within the chosen subject without repeats', () => {
     const subject = bcsQuestions[0]!.subject;
@@ -43,5 +43,22 @@ describe('BCS question bank size', () => {
   it('has thousands of questions, each with 4 distinct options', () => {
     expect(bcsQuestions.length).toBeGreaterThan(2000);
     expect(bcsQuestions.filter(q => new Set(q.options).size !== 4)).toEqual([]);
+  });
+});
+
+import { makeDeck as makeDeck2, MATH_SUBJECT, bcsQuestions as allQs } from '@/lib/bcs-questions';
+describe('BCS deck freshness', () => {
+  it('math is less frequent than other subjects in mixed mode', () => {
+    const deck = makeDeck2(null); const qs = Array.from({ length: 150 }, deck);
+    const math = qs.filter(q => q.subject === MATH_SUBJECT).length;
+    expect(math).toBeLessThan(150 / 8);
+  });
+  it('a replay does not repeat questions from the previous game', () => {
+    const seen = new Set<string>();
+    const first = Array.from({ length: 20 }, makeDeck2(null, Math.random, seen)).map(q => q.q);
+    const second = Array.from({ length: 20 }, makeDeck2(null, Math.random, seen)).map(q => q.q);
+    expect(second.filter(q => first.includes(q))).toHaveLength(0);
+    expect(new Set(first).size).toBe(20);
+    expect(allQs.length).toBeGreaterThan(40);
   });
 });
