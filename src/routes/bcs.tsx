@@ -72,7 +72,8 @@ function BcsQuiz() {
     if (!q || status !== 'playing' || lockRef.current === index) return;
     lockRef.current = index;
     const out = grade(q, chosen);
-    if (out.status === 'correct') beep('correct'); else if (out.status === 'wrong') beep('wrong');
+    // নিরপেক্ষ সাউন্ড: সঠিক/ভুল বোঝা যাবে না, শুধু জমা হয়েছে তা জানাবে
+    if (chosen !== null) beep('submit');
     const all = [...results, out];
     setResults(all);
     setSelected(null); setRemaining(time);
