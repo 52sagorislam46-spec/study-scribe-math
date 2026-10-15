@@ -18,6 +18,7 @@ function Home() {
     { to: '/bcs' as const, icon: BookOpenCheck, title: 'BCS কুইজ', sub: 'বিসিএস প্রস্তুতি', desc: 'প্রতি প্রশ্নে ১০ সেকেন্ড, ৪টি অপশন, শেষে ফলাফল।' },
   ];
   return <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10 text-foreground">
+    <p className="mb-3 text-center text-sm font-extrabold uppercase tracking-[0.3em] text-primary">Fly Arena</p>
     <h1 className="mb-2 text-center text-3xl font-bold">কোন খেলাটি খেলবেন?</h1>
     <p className="mb-8 text-center text-muted-foreground">একটি বক্সে ক্লিক করুন</p>
     <div className="grid w-full max-w-3xl gap-5 sm:grid-cols-2">
