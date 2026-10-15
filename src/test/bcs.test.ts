@@ -18,13 +18,13 @@ describe('BCS scoring', () => {
 });
 
 describe('BCS question deck', () => {
-  it('mixed deck gives every subject an equal share and no repeats in a 40-question round', () => {
+  it("mixed deck: non-math subjects equal, math half as often, no repeats in a 40-question round", () => {
     const next = makeDeck(null);
-    const drawn = Array.from({ length: 40 }, () => next());
-    expect(new Set(drawn.map(q => q.q)).size).toBe(40);
+    const drawn = Array.from({ length: 38 }, () => next());
+    expect(new Set(drawn.map(q => q.q)).size).toBe(38);
     const counts = new Map<string, number>();
     drawn.forEach(q => counts.set(q.subject, (counts.get(q.subject) ?? 0) + 1));
-    expect([...counts.values()].every(c => c === 5)).toBe(true);
+    counts.forEach((c, s) => expect(c).toBe(s === MATH_SUBJECT ? 2 : 5));
   });
   it('keeps subject decks within the chosen subject without repeats', () => {
     const subject = bcsQuestions[0]!.subject;
