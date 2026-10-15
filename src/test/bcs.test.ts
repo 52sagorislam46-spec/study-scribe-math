@@ -45,3 +45,20 @@ describe('BCS question bank size', () => {
     expect(bcsQuestions.filter(q => new Set(q.options).size !== 4)).toEqual([]);
   });
 });
+
+import { makeDeck as makeDeck2, MATH_SUBJECT, bcsQuestions as allQs } from '@/lib/bcs-questions';
+describe('BCS deck freshness', () => {
+  it('math is less frequent than other subjects in mixed mode', () => {
+    const deck = makeDeck2(null); const qs = Array.from({ length: 150 }, deck);
+    const math = qs.filter(q => q.subject === MATH_SUBJECT).length;
+    expect(math).toBeLessThan(150 / 8);
+  });
+  it('a replay does not repeat questions from the previous game', () => {
+    const seen = new Set<string>();
+    const first = Array.from({ length: 20 }, makeDeck2(null, Math.random, seen)).map(q => q.q);
+    const second = Array.from({ length: 20 }, makeDeck2(null, Math.random, seen)).map(q => q.q);
+    expect(second.filter(q => first.includes(q))).toHaveLength(0);
+    expect(new Set(first).size).toBe(20);
+    expect(allQs.length).toBeGreaterThan(40);
+  });
+});
