@@ -47,12 +47,13 @@ function BcsQuiz() {
   const lockRef = useRef(-1); // prevents the same question being answered twice (timer + click)
 
   useEffect(() => { setStats(loadStats()); }, []);
-  const beep = (kind: 'correct' | 'wrong' | 'tick') => {
+  const beep = (kind: 'correct' | 'wrong' | 'tick' | 'submit') => {
     if (muted) return;
     try {
       const ctx = audioRef.current ?? new AudioContext(); audioRef.current = ctx; void ctx.resume();
-      const freqs = kind === 'correct' ? [660, 880] : kind === 'wrong' ? [200, 140] : [1000];
-      freqs.forEach((f, i) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = kind === 'wrong' ? 'triangle' : 'sine'; o.frequency.value = f; const t = ctx.currentTime + i * 0.11; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(kind === 'tick' ? 0.05 : 0.08, t + 0.01); g.gain.exponentialRampToValueAtTime(0.001, t + (kind === 'tick' ? 0.08 : 0.18)); o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + 0.2); });
+      // 'submit' নিরপেক্ষ শব্দ: সঠিক/ভুল উভয় উত্তরে একই রকম, ফলে শুনে বোঝা যায় না
+      const freqs = kind === 'correct' ? [660, 880] : kind === 'wrong' ? [200, 140] : kind === 'submit' ? [520] : [1000];
+      freqs.forEach((f, i) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.value = f; const t = ctx.currentTime + i * 0.11; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(kind === 'tick' ? 0.05 : 0.08, t + 0.01); g.gain.exponentialRampToValueAtTime(0.001, t + (kind === 'tick' ? 0.08 : 0.18)); o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + 0.2); });
     } catch { /* sound unavailable */ }
   };
   const pickMode = (m: QuizMode) => { setMode(m); setNegative(m === 'model'); if (m === 'model' && count === 10) setCount(50); };
