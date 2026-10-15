@@ -22,6 +22,9 @@ const MODES: { id: QuizMode; label: string; desc: string }[] = [
   { id: 'subject', label: 'বিষয়ভিত্তিক অনুশীলন', desc: 'একটি বিষয় বেছে নিয়ে অনুশীলন, প্রতি প্রশ্নে ২০ সেকেন্ড' },
   { id: 'model', label: 'পূর্ণাঙ্গ মডেল টেস্ট', desc: 'অফিশিয়াল স্টাইল, নেগেটিভ মার্কিং সহ, প্রতি প্রশ্নে ৩০ সেকেন্ড' },
 ];
+const SEEN_KEY = 'bcs-seen-questions-v1';
+function loadSeen(): Set<string> { try { const v: unknown = JSON.parse(localStorage.getItem(SEEN_KEY) ?? '[]'); return new Set(Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []); } catch { return new Set(); } }
+function saveSeen(seen: Set<string>) { try { localStorage.setItem(SEEN_KEY, JSON.stringify([...seen])); } catch { /* storage unavailable */ } }
 const bn = (n: number) => String(n).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'.charAt(Number(d)));
 
 function BcsQuiz() {
@@ -54,7 +57,7 @@ function BcsQuiz() {
   };
   const pickMode = (m: QuizMode) => { setMode(m); setNegative(m === 'model'); if (m === 'model' && count === 10) setCount(50); };
   const start = () => {
-    const deck = makeDeck(mode === 'subject' ? subject : null); deckRef.current = deck;
+    const seen = loadSeen(); const deck = makeDeck(mode === 'subject' ? subject : null, Math.random, seen, () => saveSeen(seen)); deckRef.current = deck;
     setQuestions(endless ? [deck()] : Array.from({ length: count }, deck));
     lockRef.current = -1; setIndex(0); setSelected(null); setRemaining(time); setResults([]); setStatus('playing');
   };

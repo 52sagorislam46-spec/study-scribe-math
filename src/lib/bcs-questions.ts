@@ -71,18 +71,30 @@ export const MODE_TIME: Record<QuizMode, number> = { quick: 10, subject: 20, mod
 export const NEGATIVE_MARK = 0.5;
 export function computeScore(correct: number, wrong: number, negative: boolean) { return correct - (negative ? wrong * NEGATIVE_MARK : 0); }
 
-/** Shuffled deck that never repeats a question until the whole pool has been used. */
-export function makeDeck(subject: string | null, rand = Math.random) {
-  // Mixed mode rotates subjects evenly so the large math pool does not dominate.
+/** Shuffled deck that never repeats a question until the whole pool has been used.
+ *  `seen` (question texts from earlier games) are pushed to the back so replays get fresh questions first.
+ *  In mixed mode the math subject appears only every other subject cycle, so math questions come up less often. */
+export const MATH_SUBJECT = SUBJECTS[6];
+export function makeDeck(subject: string | null, rand = Math.random, seen: Set<string> = new Set(), onPick?: (q: BcsQuestion) => void) {
   const subjects = subject ? [subject] : SUBJECTS.filter(s => bcsQuestions.some(q => q.subject === s));
   const queues = new Map<string, BcsQuestion[]>();
   let order: string[] = [];
+  let cycle = 0;
   return () => {
-    if (!order.length) order = shuffle(subjects, rand);
+    if (!order.length) { order = shuffle(subjects.filter(s => subject || s !== MATH_SUBJECT || cycle % 2 === 1), rand); cycle++; }
     const s = order.pop()!;
     let queue = queues.get(s);
-    if (!queue?.length) { queue = shuffle(bcsQuestions.filter(q => q.subject === s), rand); queues.set(s, queue); }
-    return queue.pop()!;
+    if (!queue?.length) {
+      const all = bcsQuestions.filter(q => q.subject === s);
+      let fresh = all.filter(q => !seen.has(q.q));
+      if (!fresh.length) { all.forEach(q => seen.delete(q.q)); fresh = all; }
+      // queue pops from the end: fresh questions go last (popped first)
+      queue = [...shuffle(all.filter(q => !fresh.includes(q)), rand), ...shuffle(fresh, rand)];
+      queues.set(s, queue);
+    }
+    const q = queue.pop()!;
+    seen.add(q.q); onPick?.(q);
+    return q;
   };
 }
 function shuffle<T>(arr: T[], rand: () => number) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); const t = a[i]!; a[i] = a[j]!; a[j] = t; } return a; }
