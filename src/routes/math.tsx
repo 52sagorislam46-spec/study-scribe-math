@@ -10,9 +10,9 @@ import { formatTime, matchReducer, newMatch, PULL_TARGET, type Difficulty, type 
 
 export const Route = createFileRoute('/math')({
   head: () => ({ meta: [
-    { title: 'Tug of Math — Tug of War: Mathematics' },
+    { title: 'Tug of Math — Fly Arena' },
     { name: 'description', content: 'A friendly two-player mathematics showdown. Pick your challenge, race to solve, and pull your team to victory.' },
-    { property: 'og:title', content: 'Tug of Math — Tug of War: Mathematics' },
+    { property: 'og:title', content: 'Tug of Math — Fly Arena' },
     { property: 'og:description', content: 'Two teams. One rope. A classroom-ready mathematics showdown with live pulls and local match results.' },
     { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' },
   ] }),
