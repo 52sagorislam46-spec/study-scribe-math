@@ -78,11 +78,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Tug of Math" },
-      { name: "description", content: "A friendly two-player mathematics tug of war." },
+      { title: "Fly Arena" },
+      { name: "description", content: "Fly Arena — অংক ও BCS কুইজের লড়াই।" },
       
-      { property: "og:title", content: "Tug of Math" },
-      { property: "og:description", content: "A friendly two-player mathematics tug of war." },
+      { property: "og:title", content: "Fly Arena" },
+      { property: "og:description", content: "Fly Arena — অংক ও BCS কুইজের লড়াই।" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       

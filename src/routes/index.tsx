@@ -3,9 +3,9 @@ import { BookOpenCheck, Swords } from 'lucide-react';
 
 export const Route = createFileRoute('/')({
   head: () => ({ meta: [
-    { title: 'Challenge Tug — অংক ও BCS কুইজ গেম' },
+    { title: 'Fly Arena — অংক ও BCS কুইজ গেম' },
     { name: 'description', content: 'দুটি গেম এক জায়গায়: Tug of Math অংকের লড়াই এবং ১০ সেকেন্ডের BCS কুইজ চ্যালেঞ্জ।' },
-    { property: 'og:title', content: 'Challenge Tug — অংক ও BCS কুইজ গেম' },
+    { property: 'og:title', content: 'Fly Arena — অংক ও BCS কুইজ গেম' },
     { property: 'og:description', content: 'অংকের টাগ-অফ-ওয়ার আর বিসিএস প্রস্তুতির কুইজ — একটি বেছে নিন।' },
     { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' },
   ] }),
